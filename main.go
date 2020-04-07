@@ -1,11 +1,11 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"html/template"
 	"net/http"
-	"crypto/sha256"
-	"encoding/hex"
 
 	"./models"
 )
@@ -42,7 +42,7 @@ func savePostHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", 302)
 }
 
-//hashing func 
+//hashing func
 func SetHash(b_content string) string {
 	//headers := bytes.Join([][]byte{b_id, b_content}, []byte{})
 	hash := sha256.Sum256([]byte(b_content))
@@ -52,6 +52,14 @@ func SetHash(b_content string) string {
 }
 
 func main() {
+	//start chains
+	bc := NewBlockchain()
+	defer bc.db.Close()
+
+	cli := CLI{bc}
+
+	fmt.Println("Status: chain is running.")
+
 	fmt.Println("Status: server is runnig.")
 
 	posts = make(map[string]*models.Post, 0)
@@ -60,5 +68,9 @@ func main() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/SavePost", savePostHandler)
 
+	//chain init
+	cli.Run()
+
 	http.ListenAndServe(":3000", nil)
+
 }

@@ -22,7 +22,7 @@ func (cli *CLI) printUsage() {
 func (cli *CLI) validateArgs() {
 	if len(os.Args) < 2 {
 		cli.printUsage()
-		os.Exit(1)
+		//os.Exit(1)
 	}
 }
 
@@ -77,7 +77,7 @@ func (cli *CLI) Run() {
 	if addBlockCmd.Parsed() {
 		if *addBlockData == "" {
 			addBlockCmd.Usage()
-			os.Exit(1)
+			//os.Exit(1)
 		}
 		cli.addBlock(*addBlockData)
 	}
